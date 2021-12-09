@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "npx node@16.13 index.js"
   },
-  "engines": "16.6.1",
   "keywords": [],
   "author": "",
   "license": "ISC",
