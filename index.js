@@ -194,7 +194,8 @@ client.on("messageCreate", async (message) => {
       );
     message.channel.send({ embeds: [embed] });
   } else if (command == "cg!invite") {
-    const link = client.generateInvite();
+    const link =
+      "https://discord.com/api/oauth2/authorize?client_id=918016708114001931&permissions=8&scope=bot";
     const embed = new MessageEmbed()
       .setTitle("invite cricket game")
       .setURL(link);
