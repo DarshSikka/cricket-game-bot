@@ -2,6 +2,13 @@ const { Client, Intents, MessageEmbed } = require("discord.js");
 const Game = require("./Game");
 const User = require("./User");
 const mongoose = require("mongoose");
+const port = process.env.PORT || 5000;
+const express = require("express");
+const app = express();
+app.get("/", (req, res) => {
+  res.send("Cricket game bot is working out!");
+});
+app.listen(port, console.log(`${port} is what im listening on`));
 require("dotenv").config();
 mongoose.connect(process.env.DB_URI, {}, () => {
   console.log("connected to db");
@@ -34,13 +41,16 @@ client.on("messageCreate", async (message) => {
     )[0];
     const matcharg = games.filter(
       (game) =>
-        game.bowl == arg.replace("<@!", ">") ||
-        game.bat == arg.replace("<@!", ">")
+        game.bowl == arg.replace("<@!", "").replace(">", "") ||
+        game.bat == arg.replace("<@!", "").replace(">", "")
     )[0];
     if (match) {
       return message.channel.send("already in a match");
     } else if (matcharg) {
       return message.channel.send("opponent already in a match");
+    }
+    if (message.author.id == arg.replace("<@!", "").replace(">", "")) {
+      return message.channel.send("ur dumb, playing urself eh, i won't let u");
     }
     console.log(arg);
     const msg = await message.reply(
@@ -100,6 +110,11 @@ client.on("messageCreate", async (message) => {
       (game) => game.bowl == message.author.id || game.bat == message.author.id
     )[0];
     if (match) {
+      if (match.bowl.id === message.author.id) {
+        match.updateLeaderboard(true);
+      } else {
+        match.updateLeaderboard(false);
+      }
       match.over = true;
       message.channel.send(
         "match over i'll call it a draw if someone's a lazy quitter just tell them i gtg."
