@@ -160,7 +160,7 @@ client.on("messageCreate", async (message) => {
         },
         {
           name: "Challenge",
-          value: "cg!challenge @personyouwanttochallenge",
+          value: "cg!chal @personyouwanttochallenge",
         },
         {
           name: "Shots",
