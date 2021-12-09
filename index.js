@@ -193,6 +193,12 @@ client.on("messageCreate", async (message) => {
         "Once you make the challenge, you need to dm the bot with either your shot or your ball command, if you are batting use shot and during bowling use ball command."
       );
     message.channel.send({ embeds: [embed] });
+  } else if (command == "cg!invite") {
+    const link = client.generateInvite();
+    const embed = new MessageEmbed()
+      .setTitle("invite cricket game")
+      .setURL(link);
+    message.channel.send({ embeds: [embed] });
   }
 });
 const destroyOverGames = () => {
