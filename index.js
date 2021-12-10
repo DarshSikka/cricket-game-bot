@@ -146,16 +146,16 @@ client.on("messageCreate", async (message) => {
       .setTitle("Cricket Game Bot Help")
       .addFields(
         {
-          name: "prefix",
+          name: "Prefix",
           value: "cg!",
         },
         {
-          name: "shot",
+          name: "Shot",
           value: "cg!shot <shot_name>",
         },
-        { name: "ball", value: "cg!ball <ball_name>", inline: true },
+        { name: "Ball", value: "cg!ball <ball_name>", inline: true },
         {
-          name: "quit game",
+          name: "Quit Game",
           value: "cg!quit",
         },
         {
@@ -187,6 +187,11 @@ client.on("messageCreate", async (message) => {
           name: "Lofting shots",
           value:
             "pass lofted_ before the shot name to play a loft. Example. cg!shot lofted_cover_drive",
+        },
+        { name: "Leaderboard", value: "use cg!lb to see the leaderboard" },
+        {
+          name: "Invite",
+          value: "cg!invite (add the bot to your server)",
         }
       )
       .setDescription(
