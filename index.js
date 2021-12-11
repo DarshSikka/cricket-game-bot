@@ -199,8 +199,13 @@ client.on("messageCreate", async (message) => {
             "counterpart to loft, increases probability of getting a wicket, but its easier for a batsman to hit sixes. pass spin before the ball name to do it. eg. cg!ball spin_short",
         }
       )
+      .setThumbnail("https://i.imgur.com/ck1lTQy.png")
       .setDescription(
         "Once you make the challenge, you need to dm the bot with either your shot or your ball command, if you are batting use shot and during bowling use ball command."
+      )
+      .setFooter(
+        "Made by Dasher7349 | Design by BlackPool and Ayon C ",
+        "https://i.imgur.com/ck1lTQy.png"
       );
     message.channel.send({ embeds: [embed] });
   } else if (command == "cg!invite") {
