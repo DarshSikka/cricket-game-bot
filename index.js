@@ -194,8 +194,9 @@ client.on("messageCreate", async (message) => {
           value: "cg!invite (add the bot to your server)",
         },
         {
-          name: "Spin",
-          value: "tba",
+          name: "Spin Bowling",
+          value:
+            "counterpart to loft, increases probability of getting a wicket, but its easier for a batsman to hit sixes. pass spin before the ball name to do it. eg. cg!ball spin_short",
         }
       )
       .setDescription(
