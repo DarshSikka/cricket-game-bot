@@ -192,6 +192,10 @@ client.on("messageCreate", async (message) => {
         {
           name: "Invite",
           value: "cg!invite (add the bot to your server)",
+        },
+        {
+          name: "Spin",
+          value: "tba",
         }
       )
       .setDescription(

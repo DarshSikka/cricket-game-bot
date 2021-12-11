@@ -26,6 +26,7 @@ class Game {
   ballSelection = "";
   shotSelection = "";
   loft = false;
+  spin = false;
   async updateLeaderboard(won) {
     let user1 = await User.findOne({ username: this.bat.username });
     let user2 = await User.findOne({ username: this.bowl.username });
@@ -70,7 +71,7 @@ class Game {
     }
   }
   playShot(shotType) {
-    if (!shotType) {
+    if (!shotType && shotType !== 0) {
       return this.channel.send("batter chose a wrong shot, redo it pls");
     }
     if (shotType.startsWith("lofted_")) {
@@ -90,10 +91,14 @@ class Game {
     }
   }
   throwBall(ballType) {
-    if (!ballType) {
+    if (!ballType && ballType !== 0) {
       return this.channel.send("bowler chose a wrong ball, redo it pls");
     }
-    this.ballSelection = ballType;
+    if (ballType.startswith("spin_")) {
+      this.spin = true;
+      ballType = ballType.replace("spin_", "");
+    }
+    if (shotType.startswith) this.ballSelection = ballType;
     const int = parseInt(ballType);
     if (int) {
       this.ballSelection = balls[int];
@@ -143,11 +148,24 @@ class Game {
           }
         }
       } else {
-        this.scores[this.innings ? 1 : 0] += 4;
+        let runs = 4;
+        let comments = "";
+        if (this.spin) {
+          const rand = Math.random() * 3;
+          if (rand < 3) {
+            runs = 4;
+            comments = "drived the spin for 4";
+          } else {
+            runs = 6;
+            comments =
+              "in the air and out of the stadium. Spin ball gets smashed out of the park";
+          }
+        }
+        this.scores[this.innings ? 1 : 0] += runs;
         this.channel.send(
           `4 more to the batsman, stands at ${
             this.scores[this.innings ? 1 : 0]
-          }`
+          } ${comments}`
         );
         if (this.innings == true) {
           if (this.scores[1] > this.scores[0]) {
@@ -187,6 +205,34 @@ class Game {
       }
     } else {
       const rand = Math.floor(Math.random() * 3 + 1);
+      if (this.spin && rand == 2) {
+        if (this.innings && this.scores[1] > this.scores[0]) {
+          this.channel.send(`<@!${this.bat.id}> wins`);
+          this.over = true;
+          this.updateLeaderboard(true);
+        } else if ((this.innings == this.scores[1]) == this.scores[0]) {
+          this.over = true;
+          this.channel.send(
+            `Nail biting draw. Sorry but get lost u won't get any points in leaderboard`
+          );
+        } else if (this.innings) {
+          this.channel.send(`<@!${this.bowl.id}> wins, defended their score`);
+          this.over = true;
+          this.updateLeaderboard(false);
+        } else {
+          const batter = this.bat;
+          const bowler = this.bowl;
+          this.bat = bowler;
+          this.bowl = batter;
+          this.innings = true;
+          this.channel.send(
+            `<@${this.bat.id}> will bat now with a target of ${
+              this.scores[0] + 1
+            }`
+          );
+        }
+        return;
+      }
       this.scores[this.innings ? 1 : 0] += rand;
       this.channel.send(
         `${rand} more to the batsman, stands at ${
@@ -206,6 +252,7 @@ class Game {
     this.ballSelection = "";
     this.shotSelection = "";
     this.loft = false;
+    this.spin = false;
   }
 }
 module.exports = Game;
