@@ -37,6 +37,9 @@ client.on("messageCreate", async (message) => {
   let arg = parse[1];
   const origarg = arg;
   if (command === "cg!chal") {
+    if (!arg) {
+      return message.channel.send("Mention someone to challenge bruh");
+    }
     if (arg.includes("!")) {
       arg = arg.replace("!", "");
     }
