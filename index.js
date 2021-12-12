@@ -34,27 +34,39 @@ client.on("messageCreate", async (message) => {
     console.log("getting dm");
   }
   const command = parse[0];
-  const arg = parse[1];
+  let arg = parse[1];
+  const origarg = arg;
   if (command === "cg!chal") {
+    if (arg.includes("!")) {
+      arg = arg.replace("!", "");
+    }
+    if (!arg.includes("<@")) {
+      return message.channel.send("Ping not valid");
+    }
+    arg = arg.replace("<@", "").replace(">", "");
+    const banda = await client.users.fetch(arg);
+    if (!banda) {
+      return message.channel.send("Ping not valid");
+    } else if (banda.bot) {
+      return message.channel.send("Ur dumb eh, playing a bot?");
+    }
     const match = games.filter(
       (game) => game.bowl == message.author.id || game.bat == message.author.id
     )[0];
     const matcharg = games.filter(
-      (game) =>
-        game.bowl == arg.replace("<@!", "").replace(">", "") ||
-        game.bat == arg.replace("<@!", "").replace(">", "")
+      (game) => game.bowl == arg || game.bat == arg
     )[0];
     if (match) {
       return message.channel.send("already in a match");
     } else if (matcharg) {
       return message.channel.send("opponent already in a match");
     }
-    if (message.author.id == arg.replace("<@!", "").replace(">", "")) {
+    if (message.author.id == arg) {
       return message.channel.send("ur dumb, playing urself eh, i won't let u");
     }
     console.log(arg);
     const msg = await message.reply(
-      `hi ${arg} u interested? react with ⚔️ if yes`
+      `hi ${origarg} u interested? react with ⚔️ if yes`
     );
     msg.react("⚔️");
     setTimeout(() => {
@@ -64,8 +76,10 @@ client.on("messageCreate", async (message) => {
         .then((userList) => {
           const find = userList.filter((usr) => {
             console.log(usr.id);
-            console.log(arg.replace("<@!", "").replace(">", ""));
-            return usr.id === arg.replace("<@!", "").replace(">", "");
+            if (usr.id === arg && usr.bot) {
+              msg.channel.send("Why u dumb? Playing a bot?");
+            }
+            return usr.id === arg && !usr.bot;
           });
           console.log(find[0]);
           if (find.map((elem) => elem.username).length > 0) {
