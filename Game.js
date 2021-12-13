@@ -10,6 +10,9 @@ const strengths = {
   pull: "short",
   straight_drive: "good",
 };
+
+const gifs = require("./Gif");
+const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
 const shots = ["cover_drive", "square_drive", "pull", "straight_drive"];
 const balls = ["yorker", "good", "full", "short"];
@@ -155,9 +158,15 @@ class Game {
           if (rand < 3) {
             runs = 6;
             comments = "6 on the spin";
+            this.channel.send({
+              embeds: [new MessageEmbed().setImage(gifs.six)],
+            });
           } else {
             runs = 4;
             comments = "4 on the spin";
+            this.channel.send({
+              embeds: [new MessageEmbed().setImage(gifs.square_drive)],
+            });
           }
         }
         this.scores[this.innings ? 1 : 0] += runs;
@@ -166,6 +175,9 @@ class Game {
             this.scores[this.innings ? 1 : 0]
           } ${comments}`
         );
+        this.channel.send({
+          embeds: [new MessageEmbed().setImage(gifs[this.shotSelection])],
+        });
         if (this.innings == true) {
           if (this.scores[1] > this.scores[0]) {
             console.log("should be over");
@@ -188,8 +200,14 @@ class Game {
         this.channel.send(
           `Nail biting draw. Sorry but get lost u won't get any points in leaderboard`
         );
+        const gif = gifs[this.ballSelection];
+        const emb = new MessageEmbed().setImage(gif);
+        this.channel.send({ embeds: [emb] });
       } else if (this.innings) {
         this.channel.send(`<@!${this.bowl.id}> wins, defended their score`);
+        const gif = gifs[this.ballSelection];
+        const emb = new MessageEmbed().setImage(gif);
+        this.channel.send({ embeds: [emb] });
         this.over = true;
         this.updateLeaderboard(false);
       } else {
@@ -203,6 +221,9 @@ class Game {
             this.scores[0] + 1
           }`
         );
+        const gif = gifs[this.ballSelection];
+        const emb = new MessageEmbed().setImage(gif);
+        this.channel.send({ embeds: [emb] });
       }
     } else {
       const rand = Math.floor(Math.random() * 3 + 1);
@@ -213,10 +234,14 @@ class Game {
           this.channel.send(
             `Nail biting draw. got him with the spin. Sorry but get lost u won't get any points in leaderboard`
           );
+          const embed = new MessageEmbed().setImage(gifs.spin);
+          this.channel.send({ embeds: [embed] });
         } else if (this.innings) {
           this.channel.send(
             `got him with the spin <@!${this.bowl.id}> wins, defended their score`
           );
+          const embed = new MessageEmbed().setImage(gifs.spin);
+          this.channel.send({ embeds: [embed] });
           this.over = true;
           this.updateLeaderboard(false);
         } else {
@@ -230,6 +255,8 @@ class Game {
               this.bat.id
             }> will bat now with a target of ${this.scores[0] + 1}`
           );
+          const embed = new MessageEmbed().setImage(gifs.spin);
+          this.channel.send({ embeds: [embed] });
         }
       } else {
         this.scores[this.innings ? 1 : 0] += rand;
