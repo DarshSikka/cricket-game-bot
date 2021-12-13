@@ -31,15 +31,15 @@ class Game {
   loft = false;
   spin = false;
   async updateLeaderboard(won) {
-    let user1 = await User.findOne({ username: this.bat.username });
-    let user2 = await User.findOne({ username: this.bowl.username });
+    let user1 = await User.findOne({ username: this.bat.tag });
+    let user2 = await User.findOne({ username: this.bowl.tag });
     let newUsr1;
     let newUsr2;
     if (!user1) {
-      newUsr1 = new User({ username: this.bat.username });
+      newUsr1 = new User({ username: this.bat.tag });
     }
     if (!user2) {
-      newUsr2 = new User({ username: this.bowl.username });
+      newUsr2 = new User({ username: this.bowl.tag });
     }
     if (won) {
       if (user1) {
