@@ -27,6 +27,9 @@ const client = new Client({
 });
 client.on("ready", (client) => {
   console.log(client.token);
+  client.user.setActivity("cg!help", {
+    type: "LISTENING",
+  });
 });
 client.on("messageCreate", async (message) => {
   const parse = message.content.split(" ");
