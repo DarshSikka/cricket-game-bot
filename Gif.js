@@ -8,7 +8,7 @@ const gifs = {
   good: "https://c.tenor.com/2PSXGYlIh54AAAAS/jimmy-anderson-swing.gif",
   full: "https://c.tenor.com/2PSXGYlIh54AAAAS/jimmy-anderson-swing.gif",
   yorker: "https://c.tenor.com/8g1s9E6A1AYAAAAd/starc-ben-stokes.gif",
-  six: "https://tenor.com/view/the-trade-mark-shot-of-msd-gif-cricket-sports-ipl-gif-18809750",
+  six: "https://c.tenor.com/ARdozKTULloAAAAd/the-trade-mark-shot-of-msd-gif.gif",
   short: "https://c.tenor.com/RwNJpGvikB4AAAAS/cricket.gif",
 };
 module.exports = gifs;
