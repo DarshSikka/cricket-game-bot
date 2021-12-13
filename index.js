@@ -144,7 +144,7 @@ client.on("messageCreate", async (message) => {
       ["won", -1],
       ["highest", -1],
     ]);
-    let emb = new MessageEmbed().setTitle("Leaderboard for cricket game bot");
+    let emb = new MessageEmbed().setTitle("Leaderboard for crickey boi bot");
     usrs.forEach((user, index) => {
       emb = emb.addFields(
         {
@@ -160,7 +160,7 @@ client.on("messageCreate", async (message) => {
   } else if (command == "cg!help") {
     const embed = new MessageEmbed()
       .setColor(0x0099ff)
-      .setTitle("Cricket Game Bot Help")
+      .setTitle("Crickey Boi Bot Help")
       .addFields(
         {
           name: "Prefix",
@@ -229,8 +229,13 @@ client.on("messageCreate", async (message) => {
     const link =
       "https://discord.com/api/oauth2/authorize?client_id=918016708114001931&permissions=8&scope=bot";
     const embed = new MessageEmbed()
-      .setTitle("invite cricket game")
+      .setTitle("invite crickey boi")
+      .setDescription("do cg!server if you wanna join the server instead")
       .setURL(link);
+    message.channel.send({ embeds: [embed] });
+  } else if (command == "cg!server") {
+    const link = "https://discord.gg/aujd5rXG";
+    const embed = new MessageEmbed().setTitle("join cg server").setURL(link);
     message.channel.send({ embeds: [embed] });
   }
 });
