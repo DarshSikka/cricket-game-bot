@@ -1,6 +1,6 @@
 const gifs = {
   cover_drive:
-    "https://c.tenor.com/pzPEUyAiws4AAAAC/babar-azam-vs-boult-cover-drive.gif",
+    "https://c.tenor.com/vmYOMddRW5cAAAAS/kohli-cover-drive-king-kohli-cover-drive.gif",
   square_drive: "https://c.tenor.com/kdZC_ZvTCTUAAAAd/pocketrocket-srhking.gif",
   pull: "https://c.tenor.com/ksDnu9vniH4AAAAd/rohit-sharma-pull-shot.gif",
   straight_drive: "https://c.tenor.com/yloRwkD4TrEAAAAC/cricket-straight.gif",
