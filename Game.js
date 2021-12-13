@@ -128,6 +128,17 @@ class Game {
               this.scores[this.innings ? 1 : 0]
             }`
           );
+          if (this.innings == true) {
+            if (this.scores[1] > this.scores[0]) {
+              console.log("should be over");
+              this.over = true;
+              this.updateLeaderboard(true);
+              return this.channel.send(
+                `${comments} <@${this.bat.id}> wins, chased down`
+              );
+            }
+            this.channel.send(`${this.scores[0] + 1 - this.scores[1]} to win`);
+          }
         } else {
           if (this.innings && this.scores[1] > this.scores[0]) {
             this.channel.send(`<@!${this.bat.id}> wins`);
