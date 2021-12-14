@@ -128,14 +128,14 @@ class Game {
               this.scores[this.innings ? 1 : 0]
             }`
           );
+          const embed = new MessageEmbed().setImage(gifs["six"]);
+          this.channel.send({ embeds: [embed] });
           if (this.innings == true) {
             if (this.scores[1] > this.scores[0]) {
               console.log("should be over");
               this.over = true;
               this.updateLeaderboard(true);
-              return this.channel.send(
-                `${comments} <@${this.bat.id}> wins, chased down`
-              );
+              return this.channel.send(`<@${this.bat.id}> wins, chased down`);
             }
             this.channel.send(`${this.scores[0] + 1 - this.scores[1]} to win`);
           }
