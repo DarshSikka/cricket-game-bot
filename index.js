@@ -147,7 +147,11 @@ client.on("messageCreate", async (message) => {
       ["won", -1],
       ["highest", -1],
     ]);
-    let emb = new MessageEmbed().setTitle("Leaderboard for crickey boi bot");
+    let emb = new MessageEmbed()
+      .setTitle(
+        "Leaderboard for crickey boi bot(click on title for full leaderboard)"
+      )
+      .setURL("https://crickeyboi.vercel.app/#/leaderboard");
     usrs.forEach((user, index) => {
       emb = emb.addFields(
         {
@@ -159,7 +163,9 @@ client.on("messageCreate", async (message) => {
         { name: "Wins", value: String(user.won), inline: true }
       );
     });
-    message.channel.send({ embeds: [emb] });
+    message.channel.send({
+      embeds: [emb],
+    });
   } else if (command == "cg!help") {
     const embed = new MessageEmbed()
       .setColor(0x0099ff)
