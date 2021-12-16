@@ -81,7 +81,6 @@ class Game {
       shotType = shotType.replace("lofted_", "");
       this.loft = true;
     }
-    this.shotSelection = shotType;
     const int = parseInt(shotType);
     if (int) {
       this.shotSelection = shots[int];
@@ -89,6 +88,8 @@ class Game {
     if (!shots.includes(this.shotSelection)) {
       return this.channel.send("batter chose a wrong shot, redo it pls");
     }
+    this.shotSelection = shotType;
+
     if (this.ballSelection) {
       this.executePlay();
     }
