@@ -110,10 +110,10 @@ class Game {
     if (!balls.includes(ballType)) {
       return this.channel.send("bowler chose a wrong ball, redo it pls");
     }
+    this.ballSelection = ballType;
     if (this.shotSelection) {
       this.executePlay();
     }
-    this.ballSelection = ballType;
   }
 
   executePlay() {
