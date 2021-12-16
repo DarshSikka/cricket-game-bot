@@ -85,7 +85,8 @@ class Game {
     if (int) {
       this.shotSelection = shots[int];
     }
-    if (!shots.includes(this.shotSelection)) {
+    console.log(shotType);
+    if (!shots.includes(shotType)) {
       return this.channel.send("batter chose a wrong shot, redo it pls");
     }
     this.shotSelection = shotType;
@@ -102,17 +103,17 @@ class Game {
       ballType = ballType.replace("spin_", "");
       this.spin = true;
     }
-    this.ballSelection = ballType;
     const int = parseInt(ballType);
     if (int) {
       this.ballSelection = balls[int];
     }
-    if (!balls.includes(this.ballSelection)) {
+    if (!balls.includes(ballType)) {
       return this.channel.send("bowler chose a wrong ball, redo it pls");
     }
     if (this.shotSelection) {
       this.executePlay();
     }
+    this.ballSelection = ballType;
   }
 
   executePlay() {
