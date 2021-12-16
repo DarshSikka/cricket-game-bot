@@ -43,14 +43,12 @@ client.on("messageCreate", async (message) => {
     if (!arg) {
       return message.channel.send("Mention someone to challenge bruh");
     }
-    if (arg.includes("!")) {
-      arg = arg.replace("!", "");
+    const usrId = message.mentions.users.map((ele) => ele)[0];
+    console.log(usrId);
+    if (!usrId) {
+      return message.channel.send("Mention someone to challenge bruh");
     }
-    if (!arg.includes("<@")) {
-      return message.channel.send("Ping not valid");
-    }
-    arg = arg.replace("<@", "").replace(">", "");
-    const banda = await client.users.fetch(arg);
+    const banda = await client.users.fetch(usrId.id);
     if (!banda) {
       return message.channel.send("Ping not valid");
     } else if (banda.bot) {
@@ -60,19 +58,19 @@ client.on("messageCreate", async (message) => {
       (game) => game.bowl == message.author.id || game.bat == message.author.id
     )[0];
     const matcharg = games.filter(
-      (game) => game.bowl == arg || game.bat == arg
+      (game) => game.bowl == usrId.id || game.bat == usrId.id
     )[0];
     if (match) {
       return message.channel.send("already in a match");
     } else if (matcharg) {
       return message.channel.send("opponent already in a match");
     }
-    if (message.author.id == arg) {
+    if (message.author.id == usrId.id) {
       return message.channel.send("ur dumb, playing urself eh, i won't let u");
     }
-    console.log(arg);
+    console.log(usrId);
     const msg = await message.reply(
-      `hi ${origarg} u interested? react with ⚔️ if yes`
+      `hi <@${usrId.id}> u interested? react with ⚔️ if yes`
     );
     msg.react("⚔️");
     setTimeout(() => {
@@ -85,7 +83,7 @@ client.on("messageCreate", async (message) => {
             if (usr.id === arg && usr.bot) {
               msg.channel.send("Why u dumb? Playing a bot?");
             }
-            return usr.id === arg && !usr.bot;
+            return usr.id === usrId.id && !usr.bot;
           });
           console.log(find[0]);
           if (find.map((elem) => elem.username).length > 0) {
