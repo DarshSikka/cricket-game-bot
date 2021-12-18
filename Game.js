@@ -57,18 +57,38 @@ class Game {
     if (user1) {
       user1.highest =
         user1.highest < this.scores[1] ? this.scores[1] : user1.highest;
+      if (this.scores[1] >= 100) {
+        user1.hundreds += 1;
+      } else if (this.scores[1] >= 50) {
+        user1.fifties += 1;
+      }
       user1.save();
     }
     if (user2) {
+      if (this.scores[0] >= 100) {
+        user2.hundreds += 1;
+      } else if (this.scores[0] >= 50) {
+        user2.fifties += 1;
+      }
       user2.highest =
         user2.highest < this.scores[0] ? this.scores[0] : user2.highest;
       user2.save();
     }
     if (newUsr1) {
+      if (this.scores[1] >= 100) {
+        newuUsr1.hundreds += 1;
+      } else if (this.scores[1] >= 50) {
+        newUsr1.fifties += 1;
+      }
       newUsr1.highest = this.scores[1];
       newUsr1.save();
     }
     if (newUsr2) {
+      if (this.scores[0] >= 100) {
+        newUsr2.hundreds += 1;
+      } else if (this.scores[0] >= 50) {
+        newUsr2.fifties += 1;
+      }
       newUsr2.highest = this.scores[0];
       newUsr2.save();
     }

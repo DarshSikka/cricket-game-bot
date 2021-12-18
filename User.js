@@ -12,6 +12,14 @@ const schm = new Schema({
     type: Number,
     default: 0,
   },
+  fifties: {
+    type: Number,
+    default: 0,
+  },
+  hundreds: {
+    type: Number,
+    default: 0,
+  },
 });
 const mod = model("User", schm, "lb");
 module.exports = mod;
