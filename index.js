@@ -123,6 +123,20 @@ client.on("messageCreate", async (message) => {
     message.channel.send("Ball thrown");
     game[0].throwBall(arg);
     console.log(game);
+  } else if (command == "cg!toss") {
+    if (arg !== "heads" && arg !== "tails") {
+      return message.channel.send(
+        ":knife: send me ur heads / tails or ima kill ya"
+      );
+    } else {
+      const rand = Math.floor(Math.random() * 2 + 1);
+      const result = rand === 1 ? "heads" : "tails";
+      message.channel.send(
+        `the result is ${result}, thus <@${message.author.id}> ${
+          result === arg ? "wins" : "loses"
+        }`
+      );
+    }
   } else if (command == "cg!quit") {
     const match = games.filter(
       (game) => game.bowl == message.author.id || game.bat == message.author.id
