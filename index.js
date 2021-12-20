@@ -38,6 +38,7 @@ client.on("messageCreate", async (message) => {
   }
   const command = parse[0];
   let arg = parse[1];
+  let arg2 = parse[2];
   const origarg = arg;
   if (command === "cg!chal") {
     if (!arg) {
@@ -93,11 +94,13 @@ client.on("messageCreate", async (message) => {
               } and the bowler is ${find.map((elem) => elem.tag)[0]}`
             );
             const user = find.map((elem) => elem)[0];
+            console.log(parseInt(arg2));
             console.log("bowler id", find.map((elem) => elem.id)[0]);
             const game = new Game({
               bat: message.author,
               bowl: find.map((elem) => elem)[0],
               channel: msg.channel,
+              overs: parseInt(arg2) > 0 ? parseInt(arg2) : null,
             });
             games.push(game);
           } else {

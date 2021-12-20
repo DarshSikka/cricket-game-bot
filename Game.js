@@ -18,10 +18,14 @@ const shots = ["cover_drive", "square_drive", "pull", "straight_drive"];
 const balls = ["yorker", "good", "full", "short"];
 const User = require("./User");
 class Game {
-  constructor({ bat, bowl, channel }) {
+  constructor({ bat, bowl, channel, overs }) {
     this.bat = bat;
     this.bowl = bowl;
     this.channel = channel;
+    this.overs = overs;
+    this.ballsLeft = this.overs ? this.overs * 6 : null;
+    this.unlimited = this.ballsLeft === null ? true : false;
+    console.log(this.ballsLeft);
   }
   scores = [0, 0];
   innings = false;
@@ -30,6 +34,7 @@ class Game {
   shotSelection = "";
   loft = false;
   spin = false;
+  lazyFix = false;
   async updateLeaderboard(won) {
     let user1 = await User.findOne({ username: this.bat.tag });
     let user2 = await User.findOne({ username: this.bowl.tag });
@@ -137,6 +142,7 @@ class Game {
   }
 
   executePlay() {
+    console.log(this.ballsLeft);
     const strength = strengths[this.shotSelection];
     const weakness = weaknesses[this.shotSelection];
     if (this.ballSelection == strength) {
@@ -181,6 +187,10 @@ class Game {
                 this.bat.id
               }> will bat now with a target of ${this.scores[0] + 1}`
             );
+            if (!this.unlimited) {
+              this.ballsLeft = this.overs * 6;
+              this.lazyFix = true;
+            }
           }
         }
       } else {
@@ -271,6 +281,10 @@ class Game {
             this.scores[0] + 1
           }`
         );
+        if (!this.unlimited) {
+          this.ballsLeft = this.overs * 6;
+          this.lazyFix = true;
+        }
         const gif = gifs[this.ballSelection];
         const emb = new MessageEmbed().setImage(gif);
         this.channel.send({ embeds: [emb] });
@@ -305,6 +319,10 @@ class Game {
               this.bat.id
             }> will bat now with a target of ${this.scores[0] + 1}`
           );
+          if (!this.unlimited) {
+            this.ballsLeft = this.overs * 6;
+            this.lazyFix = true;
+          }
           const embed = new MessageEmbed().setImage(gifs.spin);
           this.channel.send({ embeds: [embed] });
         }
@@ -329,6 +347,43 @@ class Game {
     this.ballSelection = "";
     this.shotSelection = "";
     this.loft = false;
+    if (!this.lazyFix && !this.unlimited) {
+      this.ballsLeft -= 1;
+      if (this.ballsLeft == 0) {
+        if (this.innings && this.scores[1] == this.scores[0]) {
+          this.over = true;
+          this.channel.send(
+            `Nail biting draw. Sorry but get lost u won't get any points in leaderboard, as the batter ran out of balls`
+          );
+          const gif = gifs[this.ballSelection];
+          const emb = new MessageEmbed().setImage(gif);
+          this.channel.send({ embeds: [emb] });
+        } else if (this.innings) {
+          this.channel.send(
+            `<@!${this.bowl.id}> wins, defended their score, as the batter ran out of balls`
+          );
+          const gif = gifs[this.ballSelection];
+          const emb = new MessageEmbed().setImage(gif);
+          this.channel.send({ embeds: [emb] });
+          this.over = true;
+          this.updateLeaderboard(false);
+        } else {
+          const batter = this.bat;
+          const bowler = this.bowl;
+          this.bat = bowler;
+          this.bowl = batter;
+          this.innings = true;
+          this.channel.send(
+            `<@${this.bat.id}> will bat now with a target of ${
+              this.scores[0] + 1
+            } as the batter ran out of balls`
+          );
+          this.ballsLeft = this.overs * 6;
+        }
+      }
+      this.channel.send(`${this.ballsLeft} balls left`);
+    }
+    this.lazyFix = false;
     this.spin = false;
   }
 }
