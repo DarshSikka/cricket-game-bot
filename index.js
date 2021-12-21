@@ -238,6 +238,11 @@ client.on("messageCreate", async (message) => {
           name: "Spin Bowling",
           value:
             "counterpart to loft, increases probability of getting a wicket, but its easier for a batsman to hit sixes. pass spin before the ball name to do it. eg. cg!ball spin_short",
+        },
+        {
+          name: "Defense shot",
+          value:
+            "add defense_ before the shot name, opposite of loft, decreases run rate but increases the amount of time u can bat. eg. cg!shot defense_straight_drive",
         }
       )
       .setThumbnail("https://i.imgur.com/ck1lTQy.png")
