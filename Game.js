@@ -35,6 +35,7 @@ class Game {
   loft = false;
   spin = false;
   lazyFix = false;
+  defenseive = false;
   async updateLeaderboard(won) {
     let user1 = await User.findOne({ username: this.bat.tag });
     let user2 = await User.findOne({ username: this.bowl.tag });
@@ -105,6 +106,9 @@ class Game {
     if (shotType.startsWith("lofted_")) {
       shotType = shotType.replace("lofted_", "");
       this.loft = true;
+    } else if (shotType.startsWith("defense_")) {
+      shotType = shotType.replace("defense_", "");
+      this.defensive = true;
     }
     const int = parseInt(shotType);
     if (int) {
@@ -147,7 +151,19 @@ class Game {
     const weakness = weaknesses[this.shotSelection];
     if (this.ballSelection == strength) {
       console.log(this.scores);
-      if (this.loft) {
+      if (this.defensive) {
+        this.scores[this.innings ? 1 : 0] += 1;
+        this.channel.send("Single taken on a defense");
+        if (this.innings == true) {
+          if (this.scores[1] > this.scores[0]) {
+            console.log("should be over");
+            this.over = true;
+            this.updateLeaderboard(true);
+            return this.channel.send(`<@${this.bat.id}> wins, chased down`);
+          }
+          this.channel.send(`${this.scores[0] + 1 - this.scores[1]} to win`);
+        }
+      } else if (this.loft) {
         const rand = Math.floor(Math.random() * 3 + 1);
         if (rand < 3) {
           this.scores[this.innings ? 1 : 0] += 6;
@@ -169,11 +185,17 @@ class Game {
           }
         } else {
           if (this.innings && this.scores[1] > this.scores[0]) {
-            this.channel.send(`<@!${this.bat.id}> wins`);
+            this.channel.send(`<@!${this.bat.id}> wins, chased down`);
+            const gif = gifs[this.shotSelection];
+            const emb = new MessageEmbed().setImage(gif);
+            this.channel.send({ embeds: [emb] });
             this.over = true;
             this.updateLeaderboard(true);
           } else if (this.innings) {
-            this.channel.send(`<@!${this.bowl.id}> wins`);
+            this.channel.send(`<@!${this.bowl.id}> wins, defended their score`);
+            const gif = gifs[this.ballSelection];
+            const emb = new MessageEmbed().setImage(gif);
+            this.channel.send({ embeds: [emb] });
             this.over = true;
             this.updateLeaderboard(false);
           } else {
@@ -242,6 +264,7 @@ class Game {
             this.scores[this.innings ? 1 : 0]
           }`
         );
+        this.ballsLeft += 1;
         if (this.innings == true) {
           if (this.scores[1] > this.scores[0]) {
             console.log("should be over");
@@ -251,43 +274,101 @@ class Game {
           }
           this.channel.send(`${this.scores[0] + 1 - this.scores[1]} to win`);
         }
-      } else if (this.innings && this.scores[1] > this.scores[0]) {
-        this.channel.send(`<@!${this.bat.id}> wins`);
-        this.over = true;
-        this.updateLeaderboard(true);
-      } else if (this.innings && this.scores[1] == this.scores[0]) {
-        this.over = true;
-        this.channel.send(
-          `Nail biting draw. Sorry but get lost u won't get any points in leaderboard`
-        );
-        const gif = gifs[this.ballSelection];
-        const emb = new MessageEmbed().setImage(gif);
-        this.channel.send({ embeds: [emb] });
-      } else if (this.innings) {
-        this.channel.send(`<@!${this.bowl.id}> wins, defended their score`);
-        const gif = gifs[this.ballSelection];
-        const emb = new MessageEmbed().setImage(gif);
-        this.channel.send({ embeds: [emb] });
-        this.over = true;
-        this.updateLeaderboard(false);
       } else {
-        const batter = this.bat;
-        const bowler = this.bowl;
-        this.bat = bowler;
-        this.bowl = batter;
-        this.innings = true;
-        this.channel.send(
-          `<@${this.bat.id}> will bat now with a target of ${
-            this.scores[0] + 1
-          }`
-        );
-        if (!this.unlimited) {
-          this.ballsLeft = this.overs * 6;
-          this.lazyFix = true;
+        if (this.defensive) {
+          const rand = Math.random() * 10;
+          if (rand >= 5) {
+            this.channel.send("Dot ball, nothing there");
+          } else if (rand > 1 && rand < 5) {
+            this.channel.send("Single taken on the defense");
+            this.scores[this.innings === true ? 1 : 0] += 1;
+            if (this.innings == true) {
+              console.log("second innings");
+              if (this.scores[1] > this.scores[0]) {
+                this.over = true;
+                this.updateLeaderboard(true);
+                return this.channel.send(`<@${this.bat.id}> wins, chased down`);
+              }
+              this.channel.send(
+                `${this.scores[0] + 1 - this.scores[1]} to win`
+              );
+            }
+          } else {
+            if (this.innings && this.scores[1] == this.scores[0]) {
+              this.over = true;
+              this.channel.send(
+                `Nail biting draw. Sorry but get lost u won't get any points in leaderboard`
+              );
+              const gif = gifs[this.ballSelection];
+              const emb = new MessageEmbed().setImage(gif);
+              this.channel.send({ embeds: [emb] });
+            } else if (this.innings) {
+              this.channel.send(
+                `<@!${this.bowl.id}> wins, defended their score`
+              );
+              const gif = gifs[this.ballSelection];
+              const emb = new MessageEmbed().setImage(gif);
+              this.channel.send({ embeds: [emb] });
+              this.over = true;
+              this.updateLeaderboard(false);
+            } else {
+              const batter = this.bat;
+              const bowler = this.bowl;
+              this.bat = bowler;
+              this.bowl = batter;
+              this.innings = true;
+              this.channel.send(
+                `<@${this.bat.id}> will bat now with a target of ${
+                  this.scores[0] + 1
+                }`
+              );
+              if (!this.unlimited) {
+                this.ballsLeft = this.overs * 6;
+                this.lazyFix = true;
+              }
+              const gif = gifs[this.ballSelection];
+              const emb = new MessageEmbed().setImage(gif);
+              this.channel.send({ embeds: [emb] });
+            }
+          }
+        } else if (this.innings && this.scores[1] > this.scores[0]) {
+          this.channel.send(`<@!${this.bat.id}> wins`);
+          this.over = true;
+          this.updateLeaderboard(true);
+        } else if (this.innings && this.scores[1] == this.scores[0]) {
+          this.over = true;
+          this.channel.send(
+            `Nail biting draw. Sorry but get lost u won't get any points in leaderboard`
+          );
+          const gif = gifs[this.ballSelection];
+          const emb = new MessageEmbed().setImage(gif);
+          this.channel.send({ embeds: [emb] });
+        } else if (this.innings) {
+          this.channel.send(`<@!${this.bowl.id}> wins, defended their score`);
+          const gif = gifs[this.ballSelection];
+          const emb = new MessageEmbed().setImage(gif);
+          this.channel.send({ embeds: [emb] });
+          this.over = true;
+          this.updateLeaderboard(false);
+        } else {
+          const batter = this.bat;
+          const bowler = this.bowl;
+          this.bat = bowler;
+          this.bowl = batter;
+          this.innings = true;
+          this.channel.send(
+            `<@${this.bat.id}> will bat now with a target of ${
+              this.scores[0] + 1
+            }`
+          );
+          if (!this.unlimited) {
+            this.ballsLeft = this.overs * 6;
+            this.lazyFix = true;
+          }
+          const gif = gifs[this.ballSelection];
+          const emb = new MessageEmbed().setImage(gif);
+          this.channel.send({ embeds: [emb] });
         }
-        const gif = gifs[this.ballSelection];
-        const emb = new MessageEmbed().setImage(gif);
-        this.channel.send({ embeds: [emb] });
       }
     } else {
       const rand = Math.floor(Math.random() * 3 + 1);
@@ -385,6 +466,7 @@ class Game {
     }
     this.lazyFix = false;
     this.spin = false;
+    this.defensive = false;
   }
 }
 module.exports = Game;
