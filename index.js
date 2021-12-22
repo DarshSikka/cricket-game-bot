@@ -271,5 +271,10 @@ client.on("messageCreate", async (message) => {
 const destroyOverGames = () => {
   games = games.filter((game) => !game.over);
 };
+setTimeout(() => {
+  client.user.setActivity(`cg!help in ${client.guilds.cache.size} servers`, {
+    type: "LISTENING",
+  });
+}, 5000);
 setInterval(destroyOverGames, 5000);
 client.login(TOKEN);
