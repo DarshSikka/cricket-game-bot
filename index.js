@@ -27,7 +27,7 @@ const client = new Client({
 });
 client.on("ready", (client) => {
   console.log(client.token);
-  client.user.setActivity("cg!help", {
+  client.user.setActivity(`cg!help in ${client.guilds.cache.size} servers`, {
     type: "LISTENING",
   });
 });
