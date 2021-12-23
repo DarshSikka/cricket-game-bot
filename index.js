@@ -263,7 +263,7 @@ client.on("messageCreate", async (message) => {
       .setURL(link);
     message.channel.send({ embeds: [embed] });
   } else if (command == "cg!server") {
-    const link = "https://discord.gg/TgAQte9zgE";
+    const link = "https://discord.gg/dbFv32mfPw";
     const embed = new MessageEmbed().setTitle("join cg server").setURL(link);
     message.channel.send({ embeds: [embed] });
   }
